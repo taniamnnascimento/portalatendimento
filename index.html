@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diário Econômico</title>
+<meta name="description" content="Nova etapa do programa reúne consulta e condições de acordo em um único ambiente. Entenda quem pode participar, como funciona e o que observar antes de negociar.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#1a1a1a;background:#fff;line-height:1.72;padding-bottom:24px}
+a{color:inherit}
+
+/* LETREIRO */
+.tira{background:#0b2a5b;color:#fff;display:flex;align-items:center;font-size:12px;overflow:hidden}
+.selo{background:#c8102e;color:#fff;font-size:10px;font-weight:800;letter-spacing:1.6px;padding:10px 14px;flex-shrink:0;display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.selo::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:pulso 1.2s infinite}
+@keyframes pulso{0%,100%{opacity:1}50%{opacity:.2}}
+.mask{overflow:hidden;flex:1}
+.trilho{display:flex;width:max-content;animation:ticker 70s linear infinite}
+.mask:hover .trilho{animation-play-state:paused}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.set{display:flex;align-items:center}
+.it{padding:10px 0;white-space:nowrap}
+.it b{color:#ffd166;margin-right:6px}
+.it::after{content:"•";color:#3d5580;margin:0 17px}
+
+/* CABEÇALHO */
+.cab{max-width:1000px;margin:0 auto;padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:3px solid #c8102e}
+.logo{font-family:Georgia,serif;font-size:23px;font-weight:800;letter-spacing:-.6px;color:#0b2a5b;text-decoration:none;white-space:nowrap}
+.logo i{color:#c8102e;font-style:normal}
+.busca{margin-left:auto;font-size:12px;color:#9a9a9a;border:1px solid #e3e3e3;border-radius:20px;padding:7px 14px;white-space:nowrap}
+.secao{background:#c8102e;color:#fff;font-size:12.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:9px 20px}
+.secao .in{max-width:720px;margin:0 auto}
+.wrap{max-width:720px;margin:0 auto;padding:26px 20px 20px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:35px;line-height:1.2;letter-spacing:-.8px;margin-bottom:14px;color:#0d0d0d}
+.sub{font-size:18px;color:#4b5563;line-height:1.55;margin-bottom:18px}
+.by{font-size:13px;color:#8b8b8b;padding-bottom:16px;border-bottom:1px solid #ececec}
+.by b{color:#333}
+.by #data{color:#a5a5a5}
+.compart{display:flex;gap:8px;margin:16px 0 18px}
+.compart span{width:34px;height:34px;border-radius:50%;background:#f2f2f2;display:grid;place-items:center;font-size:13px;font-weight:700;color:#555}
+.pub{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#b0b0b0;margin:0 0 7px}
+
+/* BOTÃO SLIM */
+.cta{display:block;text-align:center;background:#0a6cff;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 16px;border-radius:6px;margin-bottom:6px;letter-spacing:.2px;transition:box-shadow .25s,transform .25s}
+.cta:hover{background:#0059d6}
+.cta small{display:block;font-weight:400;font-size:11.5px;opacity:.9;margin-top:1px}
+.cta-nota{text-align:center;font-size:11.5px;color:#9a9a9a;margin-bottom:26px}
+
+/* ALVO DA ROLAGEM */
+#consulta{scroll-margin-top:84px}
+.cta.pisca{box-shadow:0 0 0 4px rgba(255,209,102,.85);animation:pisca .85s ease-in-out 2}
+@keyframes pisca{50%{transform:scale(1.035)}}
+
+/* ANÚNCIOS */
+.ad{display:block;position:relative;border:1px solid #e6e6e6;border-radius:9px;overflow:hidden;text-decoration:none;background:#fff;margin-bottom:28px;transition:box-shadow .18s}
+.ad:hover{box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.ad img{width:100%;height:158px;object-fit:cover;display:block}
+.adch{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.92);border-radius:4px;font-size:10px;color:#666;padding:2px 6px;letter-spacing:1px;font-weight:700}
+.adbody{padding:13px 15px 16px}
+.adbrand{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#444;margin-bottom:7px;font-weight:600}
+.adic{width:15px;height:15px;border-radius:3px;display:grid;place-items:center;font-size:9px;color:#fff;font-weight:800}
+.adtit{font-family:Georgia,serif;font-size:17.5px;line-height:1.35;color:#111;margin-bottom:13px}
+.adbtn{display:inline-block;background:#0a6cff;color:#fff;font-size:13px;font-weight:700;padding:9px 20px;border-radius:20px}
+.adbtn.escuro{background:#123a6b}
+.adbtn.verde{background:#0b6b3a}
+.admini{font-size:12.5px;color:#7a7a7a;margin-top:9px;line-height:1.5}
+
+/* CONTEÚDO */
+figure{margin:0 0 8px}
+figure img{width:100%;border-radius:6px;display:block}
+figcaption{font-size:12.5px;color:#8b8b8b;line-height:1.5;padding:8px 0 22px;border-bottom:1px solid #f0f0f0;margin-bottom:22px}
+p{margin-bottom:18px;font-size:17.5px}
+.lead{font-size:19px;font-weight:600;color:#232323}
+h2{font-family:Georgia,serif;font-size:23px;margin:32px 0 12px;color:#0d0d0d}
+ul{margin:0 0 18px 22px;font-size:17.5px}
+li{margin-bottom:9px}
+.destaque{border-left:4px solid #c8102e;background:#fdf5f6;padding:16px 18px;border-radius:6px;font-size:16px;color:#3a2a2c;margin:0 0 22px}
+.aviso{background:#f6f6f6;border-radius:8px;padding:16px 18px;font-size:13.5px;color:#5f5f5f;margin:30px 0 0;line-height:1.6}
+
+/* RODAPÉ */
+.rodape{background:#0f1a2b;color:#c8d0dc;margin-top:34px;padding:34px 20px 20px}
+.rodape .in{max-width:720px;margin:0 auto}
+.rodape h3{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#7d8ba3;margin-bottom:14px;font-weight:800}
+.mapa{width:100%;height:220px;border:0;border-radius:8px;display:block;margin-bottom:20px;filter:grayscale(.25)}
+.dados{font-size:13px;line-height:1.85;color:#9aa7ba}
+.dados b{color:#e2e8f0;display:block;font-size:14px;margin-bottom:4px}
+.finao{max-width:720px;margin:24px auto 0;padding-top:16px;border-top:1px solid #22304a;font-size:10.5px;color:#5d6b82;line-height:1.9}
+.finao a{color:#5d6b82;text-decoration:none}
+.finao span{margin:0 6px}
+
+/* POP-UP COOKIES */
+.cook{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:3px solid #0b2a5b;box-shadow:0 -10px 34px rgba(0,0,0,.22);padding:20px 22px;z-index:99;transform:translateY(110%);transition:transform .45s ease}
+.cook.on{transform:translateY(0)}
+.cook .cx{max-width:720px;margin:0 auto}
+.cook p{font-size:13px;color:#444;line-height:1.6;margin-bottom:14px}
+.cook a{color:#0b2a5b;font-weight:700}
+.cook .acoes{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cook button{background:#0b6b3a;color:#fff;border:0;font-size:14.5px;font-weight:800;padding:13px 34px;border-radius:7px;cursor:pointer;font-family:inherit}
+.cook button:hover{background:#085a30}
+.cook .saber{font-size:12.5px;color:#666;text-decoration:underline;font-weight:400;cursor:pointer}
+
+@media(max-width:560px){
+h1{font-size:27px}.sub{font-size:16px}p,ul,.lead{font-size:16.5px}
+.ad img{height:130px}
+.tira{font-size:11px}.selo{font-size:9px;padding:9px 10px}
+.cook button{width:100%}
+#consulta{scroll-margin-top:20px}
+}
+
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+.cta.pisca{animation:none}
+.trilho{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="tira">
+  <div class="selo">Últimas</div>
+  <div class="mask">
+    <div class="trilho">
+      <div class="set">
+        <span class="it"><b>Mercado</b>Câmbio e juros</span>
+        <span class="it"><b>Finanças</b>Orçamento familiar</span>
+        <span class="it"><b>Serviços</b>Direitos do consumidor</span>
+        <span class="it"><b>Crédito</b>Bancos revisam spread</span>
+        <span class="it"><b>Consumo</b>Varejo amplia renegociação</span>
+        <span class="it"><b>Cartões</b>Rotativo segue com juro alto</span>
+        <span class="it"><b>Habitação</b>Financiamento imobiliário</span>
+        <span class="it"><b>Renda</b>Emprego formal em alta</span>
+        <span class="it"><b>Educação</b>Cursos de educação financeira</span>
+        <span class="it"><b>Contas</b>Tarifas bancárias</span>
+      </div>
+      <div class="set">
+        <span class="it"><b>Mercado</b>Câmbio e juros</span>
+        <span class="it"><b>Finanças</b>Orçamento familiar</span>
+        <span class="it"><b>Serviços</b>Direitos do consumidor</span>
+        <span class="it"><b>Crédito</b>Bancos revisam spread</span>
+        <span class="it"><b>Consumo</b>Varejo amplia renegociação</span>
+        <span class="it"><b>Cartões</b>Rotativo segue com juro alto</span>
+        <span class="it"><b>Habitação</b>Financiamento imobiliário</span>
+        <span class="it"><b>Renda</b>Emprego formal em alta</span>
+        <span class="it"><b>Educação</b>Cursos de educação financeira</span>
+        <span class="it"><b>Contas</b>Tarifas bancárias</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="cab">
+  <a class="logo" href="#">Diário<i>Econômico</i></a>
+  <span class="busca">Buscar</span>
+</header>
+
+<div class="secao"><div class="in">Economia</div></div>
+
+<main class="wrap">
+
+  <h1>Desenrola Brasil 3.0 amplia descontos na renegociação e abre novas oportunidades para terminar o ano bem.</h1>
+
+  <p class="sub">Nova etapa reúne consulta e condições de acordo em um único ambiente. Entenda quem pode participar, como funciona e o que observar antes de negociar.</p>
+
+  <div class="by">Por <b>Redação</b> <span id="data"></span></div>
+
+  <div class="compart"><span>f</span><span>X</span><span>in</span><span>↗</span></div>
+
+  <figure>
+    <img src="https://s2-g1.glbimg.com/16YKOEQUPEoTHf2IbEc15zd778M=/0x0:1920x1080/1008x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2023/B/E/6CZWVdTUABIXALwTr3Hw/globo-canal-4-20230717-1959-frame-85621.jpeg" alt="Reportagem sobre renegociação de dívidas">
+    <figcaption>Conteúdo sobre renegociação de dívidas ganhou espaço na programação e nos portais (Foto: Reprodução)</figcaption>
+  </figure>
+
+  <a class="cta" id="consulta" href="fila.html">Consultar Agora
+    <small>Consulte agora · Margem Liberada</small>
+  </a>
+  <p class="cta-nota">Verifique se existem condições disponíveis para você</p>
+
+  <div class="pub">Publicidade</div>
+  <a class="ad" href="https://squareup.com/us/en/campaigns/getsquarepossignup" target="_blank" rel="noopener nofollow sponsored">
+    <span class="adch">i ⋮</span>
+    <img src="https://s0.2mdn.net/sadbundle/4437059266179646163/img3.jpg" alt="Square">
+    <div class="adbody">
+      <div class="adbrand"><span class="adic" style="background:#0a6cff">■</span>Square</div>
+      <div class="adtit">Accept contactless payments in seconds.</div>
+      <span class="adbtn">Get Square</span>
+    </div>
+  </a>
+
+  <p class="lead">A nova etapa do Desenrola 3.0 passou a concentrar, em um único ambiente, a consulta às pendências registradas e as condições de acordo oferecidas pelos credores. A mudança reduz o caminho de quem precisa renegociar, que antes dependia de procurar cada empresa separadamente.</p>
+
+  <p>O programa é voltado a pessoas físicas com dívidas em atraso. A consulta é gratuita e a cobrança, quando existe, está embutida no valor renegociado — não há taxa para consultar ou simular.</p>
+
+  <p>A simulação é individual porque o desconto varia conforme o credor, o tempo da dívida e a forma de pagamento escolhida. Dívidas mais antigas e pagamentos à vista costumam receber percentuais maiores; o parcelamento tende a reduzir o abatimento.</p>
+
+  <div class="destaque">O teto de desconto divulgado nas campanhas é o maior valor observado nas negociações, e não uma regra fixa. O percentual real depende de análise caso a caso.</div>
+
+  <figure>
+    <img src="https://thumbs.dreamstime.com/b/o-homem-preocupado-com-contas-chama-banco-pagando-do-maduro-port%C3%A1til-ao-falar-no-telefone-pensativo-em-casa-na-conversa%C3%A7%C3%A3o-149550535.jpg" alt="Homem em casa consultando contas no notebook com documentos sobre a mesa">
+    <figcaption>Consulta reúne as pendências registradas e as opções de desconto de cada credor em uma única tela (Foto: Divulgação)</figcaption>
+  </figure>
+
+  <div class="pub">Publicidade</div>
+  <a class="ad" href="https://www.thealtairhotel.com/offers/" target="_blank" rel="noopener nofollow sponsored">
+    <span class="adch">i ⋮</span>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBbQILES1jgUsn5kpEXbGLtdFURGusnMdXxm-lN8wqzTAybrh9J50G_jTr&s=10" alt="Fachada de hotel">
+    <div class="adbody">
+      <div class="adbrand"><span class="adic" style="background:#123a6b">A</span>The Altair Hotel</div>
+      <div class="adtit">Stay longer, pay less with our latest offers.</div>
+      <span class="adbtn escuro">View offers</span>
+    </div>
+  </a>
+
+  <h2>Como funciona</h2>
+
+  <p>O processo é dividido em três etapas: Iniciar consulta, visualizar as condições disponíveis e formalizar o acordo com o credor responsável. Cada pendência aparece com a respectiva proposta de abatimento.</p>
+
+  <p>Não é necessário ter conta em banco específico nem cartão de crédito para consultar. A consulta também não gera registro negativo e não compromete o score.</p>
+
+  <h2>Quem pode participar</h2>
+
+  <ul>
+    <li>Titulares com dívidas em atraso registradas no nome;</li>
+    <li>Quem quer simular a quitação antes de decidir;</li>
+    <li>Quem prefere reunir as pendências em uma única consulta.</li>
+  </ul>
+
+  <div class="pub">Publicidade</div>
+  <a class="ad" href="https://squareup.com/us/en/campaigns/getsquarepossignup" target="_blank" rel="noopener nofollow sponsored">
+    <span class="adch">i ⋮</span>
+    <img src="https://images.ctfassets.net/2d5q1td6cyxq/4Tt4o40yU18qCDEAxFRxQm/e7517aa5e6e1d1e0eef56881d0844b4e/PD06526_-_AUEN_hero_collage.png?w=1380&h=980&fm=avif&q=85&fit=scale" alt="Aplicativo de orçamento pessoal no celular">
+    <div class="adbody">
+      <div class="adbrand"><span class="adic" style="background:#0b6b3a">$</span>Orçamento em dia</div>
+      <div class="adtit">Coloque as contas do mês em uma única tela e saia do vermelho.</div>
+      <span class="adbtn verde">Começar agora</span>
+      <p class="admini">Controle de gastos, metas de quitação e alertas de vencimento.</p>
+    </div>
+  </a>
+
+  <h2>O que observar antes de negociar</h2>
+
+  <p>Acordos com desconto alto costumam exigir pagamento à vista. O não cumprimento das parcelas pode devolver a dívida ao valor original, com os encargos do período.</p>
+
+  <p>Depois da confirmação do pagamento, o credor tem prazo próprio para dar baixa no registro. Esse prazo varia por empresa e não é controlado pelo portal.</p>
+
+  <p>Também vale desconfiar de cobranças antecipadas apenas para consulta: neste serviço, a consulta e a simulação não são cobradas.</p>
+
+  <a class="cta" href="fila.html">Verificar Condições Especiais
+    <small>Leva menos de um minuto</small>
+  </a>
+  <p class="cta-nota">&nbsp;</p>
+
+  <div class="aviso">
+    <strong>Aviso de não afiliação.</strong> Este site é um portal de intermediação independente. Não é o Serasa, não é o Desenrola Brasil oficial e não possui vínculo, parceria ou endosso do Governo Federal, do Serasa ou de qualquer órgão público. "Desenrola Brasil" e "Serasa" são marcas de seus respectivos titulares, citadas apenas de forma referencial.
+  </div>
+
+</main>
+
+<footer class="rodape">
+  <div class="in">
+    <h3>Onde estamos</h3>
+    <iframe class="mapa" src="https://www.openstreetmap.org/export/embed.html?bbox=-51.3844%2C-23.3210%2C-51.3544%2C-23.3010&layer=mapnik&marker=-23.3110%2C-51.3694" loading="lazy" title="Localização da empresa"></iframe>
+    <div class="dados">
+      <b>M R Assessoria Empresarial LTDA</b>
+      CNPJ 64.185.636/0001-38<br>
+      Avenida Dos Expedicionários, 2022 — Bloco K, Apt 204<br>
+      Jardim Caviúna · CEP 86605-152<br>
+      Rolândia — Paraná
+    </div>
+  </div>
+  <div class="finao">
+    <a href="termos.html">Termos de Uso</a><span>·</span><a href="politica.html">Política de Privacidade</a><span>·</span><a href="lgpd.html">LGPD</a><span>·</span><a href="#">Perguntas Frequentes</a>
+    <div style="margin-top:8px">M R Assessoria Empresarial LTDA · 64.185.636/0001-38 · Todos os direitos reservados</div>
+  </div>
+</footer>
+
+<div class="cook" id="cook">
+  <div class="cx">
+    <p>Nós usamos cookies e outras tecnologias semelhantes para melhorar a sua experiência em nossos serviços, personalizar publicidade e recomendar conteúdo de seu interesse. Ao utilizar nossos serviços, você está ciente dessa funcionalidade. Informamos ainda que atualizamos nosso Aviso de Privacidade. Conheça nosso <a href="politica.html">Portal da Privacidade</a> e veja o nosso novo Aviso.</p>
+    <div class="acoes">
+      <button type="button" onclick="location.href='fila.html'">Prosseguir</button>
+      <a class="saber" href="#">Saiba mais</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* data dinâmica: monta a partir do relógio do visitante no carregamento */
+(function(){
+  var M = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  var d = new Date();
+  var hh = String(d.getHours()).padStart(2,'0');
+  var mm = String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('data').textContent = d.getDate() + ' de ' + M[d.getMonth()] + ' de ' + d.getFullYear() + ' — ' + hh + 'h' + mm;
+})();
+
+/* pop-up de cookies */
+setTimeout(function(){ document.getElementById('cook').classList.add('on'); }, 1400);
+
+/* "Saiba mais" e "Portal da Privacidade" (no pop-up) rolam até o CTA */
+(function(){
+  var alvo = document.getElementById('consulta');
+  var barra = document.getElementById('cook');
+  if(!alvo || !barra) return;
+
+  function irAte(e){
+    e.preventDefault();
+
+    /* fecha a barra para não cobrir o botão */
+    barra.classList.remove('on');
+    setTimeout(function(){ barra.style.pointerEvents = 'none'; }, 500);
+
+    alvo.scrollIntoView({behavior:'smooth', block:'center'});
+    alvo.classList.add('pisca');
+    setTimeout(function(){ alvo.classList.remove('pisca'); }, 2200);
+  }
+
+  var links = barra.querySelectorAll('.saber, a[href="politica.html"]');
+  Array.prototype.forEach.call(links, function(el){
+    el.addEventListener('click', irAte);
+  });
+})();
+</script>
+
+</body>
+</html>

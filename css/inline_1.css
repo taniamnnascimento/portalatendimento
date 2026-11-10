@@ -1,0 +1,132 @@
+
+    /* Chat — estilos específicos que NÃO migram pro CSS compartilhado
+       pois só são usados nesta página */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; }
+    body { font-family: 'Inter', sans-serif; background: #f0f2f5; overflow: hidden; }
+    .page-chat { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+    .chat-header {
+      background: #fff; border-bottom: 3px solid #1351B4; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+      height: 58px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; flex-shrink: 0;
+    }
+    .chat-header img { height: 34px; }
+    .btn-user { background: #1351B4; color: #fff; border: none; border-radius: 50px; padding: 6px 14px;
+      display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; font-family: inherit; }
+    .attendant-strip {
+      background: #fff; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; gap: 10px;
+      padding: 8px 14px; flex-shrink: 0; height: 56px;
+    }
+    .attendant-strip img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .att-nome  { font-weight: 700; font-size: 14px; color: #1a1a1a; }
+    .att-cargo { font-size: 12px; color: #666; }
+    .chat-msgs { flex: 1 1 auto; overflow-y: auto; padding: 16px 16px 24px; max-width: 680px; width: 100%; margin: 0 auto; }
+    .site-footer { background: #071D41; height: 72px; display: flex; flex-direction: column; justify-content: center; padding: 0 18px; flex-shrink: 0; }
+    .site-footer .gv      { color: #fff; font-size: 18px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 3px; }
+    .site-footer .gv-sub  { color: #E08D1E; font-size: 11px; }
+    .site-footer .gv-copy { color: #fff; font-size: 11px; font-weight: 700; }
+    .msg-row { display: flex; margin-bottom: 8px; align-items: flex-end; }
+    .msg-row.user { justify-content: flex-end; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-right: 7px; margin-bottom: 2px; }
+    .bubble-bot {
+      background: #fff; color: #333; border: 1px solid #e5e5e5; border-radius: 18px 18px 18px 4px;
+      padding: 11px 15px; font-size: 14px; line-height: 1.55; max-width: 78%;
+      box-shadow: 0 2px 6px rgba(0,0,0,.07); overflow-wrap: break-word;
+      animation: fadeUp .3s ease both;
+    }
+    .bubble-user {
+      background: linear-gradient(135deg, #1351B4, #0F4DA8); color: #fff; border-radius: 18px 18px 4px 18px;
+      padding: 11px 15px; font-size: 14px; line-height: 1.55; max-width: 78%; overflow-wrap: break-word;
+      animation: fadeUp .3s ease both;
+    }
+    .bubble-system { color: #666; font-size: 12.5px; font-style: italic; padding: 4px 10px; text-align: center; animation: fadeUp .3s ease both; }
+    .bubble-info-card { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.8; max-width: 82%; animation: fadeUp .3s ease both; }
+    .ic-label { color: #555; font-size: 13px; }
+    .ic-value { color: #1351B4; font-weight: 500; }
+    .ic-bold  { font-weight: 700; color: #1a1a1a; }
+    .confirm-card { background: #f5f5f5; border-radius: 10px; padding: 14px 16px; font-size: 14px; line-height: 1.7; margin-bottom: 10px; }
+    .confirm-title { font-weight: 700; display: block; margin-bottom: 8px; }
+    .confirm-card strong { display: block; color: #1a1a1a; }
+    .confirm-card span   { display: block; color: #1351B4; margin-bottom: 4px; }
+    .confirm-btns { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
+    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; animation: fadeUp .3s ease both; }
+    .btn-row.row-inline { flex-direction: row; flex-wrap: wrap; }
+    .chat-btn {
+      background: #fff; border: 2px solid #1351B4; color: #1351B4; border-radius: 22px; padding: 10px 18px;
+      font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background .15s, color .15s;
+    }
+    .chat-btn:hover, .chat-btn.solid { background: #1351B4; color: #fff; }
+    .chat-btn.wide { border-radius: 8px; text-transform: uppercase; font-size: 14px; font-weight: 700; letter-spacing: .03em; padding: 13px 20px; width: 100%; text-align: center; }
+    .chat-btn:disabled { opacity: .5; pointer-events: none; }
+    .btn-link-final {
+      display: block; width: 100%; background: #1351B4; color: #fff !important; text-decoration: none; text-align: center;
+      font-size: 14px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; border-radius: 8px; padding: 14px 16px;
+      animation: fadeUp .3s ease both;
+    }
+    .typing { display: inline-flex; align-items: center; gap: 4px; padding: 12px 16px; background: #fff; border-radius: 18px 18px 18px 4px; border: 1px solid #e5e5e5; box-shadow: 0 2px 6px rgba(0,0,0,.07); }
+    .typing span { width: 7px; height: 7px; background: #1351B4; border-radius: 50%; animation: bounce 1.2s infinite; }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---- Cartão PIX: o pagamento é uma mensagem do chat, não uma tela ---- */
+    .pix-card {
+      flex: 1; max-width: 320px; background: #fff; border: 1px solid #e5e5e5;
+      border-radius: 18px 18px 18px 4px; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+      padding: 16px; text-align: center; animation: fadeUp .3s ease both;
+    }
+    .pix-title { font-size: 15px; font-weight: 700; color: #1351B4; margin-bottom: 12px; }
+    .pix-qr {
+      display: block; width: 100%; max-width: 220px; height: auto; margin: 0 auto 12px;
+      border: 1px solid #eee; border-radius: 8px; background: #fff;
+    }
+    .pix-timer { font-size: 13px; color: #555; margin-bottom: 12px; }
+    .pix-timer strong { font-variant-numeric: tabular-nums; color: #1351B4; }
+    .pix-timer.is-urgente strong { color: #C92A2A; }
+    .pix-label { font-size: 12px; font-weight: 600; color: #666; text-align: left; margin-bottom: 5px; }
+    .pix-code {
+      width: 100%; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; line-height: 1.45;
+      color: #333; background: #f6f7f9; border: 1px solid #e0e0e0; border-radius: 8px;
+      padding: 8px; resize: none; word-break: break-all; margin-bottom: 10px;
+    }
+    .pix-copy {
+      width: 100%; background: #1351B4; color: #fff; border: none; border-radius: 8px;
+      padding: 12px 14px; font-family: inherit; font-size: 13px; font-weight: 700;
+      letter-spacing: .03em; cursor: pointer; transition: background .15s;
+    }
+    .pix-copy:hover { background: #0f4194; }
+    .pix-copy.is-copied { background: #1E7E34; }
+
+    .pix-status {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      margin-top: 12px; font-size: 13px; font-weight: 600;
+    }
+    .pix-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .pix-status--aguardando { color: #B26A00; }
+    .pix-status--aguardando .pix-dot { animation: pixPulse 1.4s ease-in-out infinite; }
+    .pix-status--pago      { color: #1E7E34; }
+    .pix-status--expirado  { color: #C92A2A; }
+    @keyframes pixPulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+
+    .pix-card.is-pago     { border-color: #1E7E34; background: #F3FBF5; }
+    .pix-card.is-expirado { border-color: #E9C0C0; background: #FDF5F5; }
+    .pix-check {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      font-size: 15px; font-weight: 700; color: #1E7E34; padding: 6px 0 2px;
+    }
+    .pix-check-ico {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 50%; background: #1E7E34; color: #fff;
+      font-size: 17px; animation: pixPop .35s ease both;
+    }
+    @keyframes pixPop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .pix-card--loading { display: flex; align-items: center; gap: 11px; text-align: left; }
+    .pix-loading-txt { font-size: 14px; color: #555; }
+    .pix-spinner {
+      width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
+      border: 2.5px solid #dfe5ee; border-top-color: #1351B4; animation: pixSpin .8s linear infinite;
+    }
+    @keyframes pixSpin { to { transform: rotate(360deg); } }
+  
